@@ -1,9 +1,16 @@
 const express = require('express');
+const app = express();
 const Author = require('../models/author');
 const Book = require('../models/book');
 const authorRouter = express.Router();
 const multer = require('multer');
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+app.use('/public', express.static(__dirname + '/public'));
+app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //get all authors
 authorRouter.get('/', (req, res) => {
@@ -16,8 +23,14 @@ authorRouter.get('/', (req, res) => {
 });
 
 //add new author
-authorRouter.post('/', upload.single('photo'), (req, res, next) => {
-    const author = new Author({
+
+    let upload=multer({dest:"public/uploads/"});
+    //add new book
+    authorRouter.post('/',upload.single("photo"),function(req,res){
+        console.log("Uploaded Successfull with filename : "+req.file.filename);
+       
+      
+      const author = new Author({
         photo: req.file.path,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -35,7 +48,8 @@ authorRouter.post('/', upload.single('photo'), (req, res, next) => {
           error: err
         });
     });
-});
+  })
+
 
 //get author by id
 authorRouter.get('/:id', (req, res) => {

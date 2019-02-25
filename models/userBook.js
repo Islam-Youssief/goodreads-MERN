@@ -11,7 +11,6 @@ const userBookSchema = new mongoose.Schema({
     },
     shelve: { type: 'String', enum: ['reading', 'will read', 'read'] },
     rate: Number,
-    review: String
 
 });
 

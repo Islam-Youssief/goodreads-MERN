@@ -1,7 +1,14 @@
 const express = require('express');
+const app = express();
+
 const Book = require('../models/book');
 const bookRouter = express.Router();
-const multer = require('multer');
+ const multer = require('multer');
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+app.use('/public', express.static(__dirname + './public'));
+app.use(bodyParser.json());
 
 //get all books
 bookRouter.get('/', (req, res) => {
@@ -12,9 +19,13 @@ bookRouter.get('/', (req, res) => {
     });
 
 });
-
+ let upload=multer({dest:"public/uploads/"});
 //add new book
-bookRouter.post('/', upload.single('photo'), (req, res) => {
+bookRouter.post('/',upload.single("photo"),function(req,res){
+    console.log("Uploaded Successfull with filename : "+req.file.filename);
+   
+  
+   
     const book = new Book({
         photo: req.file.path,
         name: req.body.name,
@@ -22,6 +33,7 @@ bookRouter.post('/', upload.single('photo'), (req, res) => {
         authorId: req.body.authorId,
         rate: req.body.rate
     });
+    console.log(book);
     book.save().then(result => {
         console.log(result);
         res.status(201).json({
@@ -33,6 +45,7 @@ bookRouter.post('/', upload.single('photo'), (req, res) => {
             error: err
         });
     });
+
 });
 
 //get book by id

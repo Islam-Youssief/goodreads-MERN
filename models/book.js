@@ -11,12 +11,6 @@ const bookSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Author"
     },
-    //rate:Number
-    bad: Number,
-    fair: Number,
-    good: Number,
-    veryGood: Number,
-    excellent: Number
 });
 
 const Book = mongoose.model('books', bookSchema);
