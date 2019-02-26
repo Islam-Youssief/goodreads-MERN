@@ -4,8 +4,9 @@ const Book = require('../models/book');
 const Category = require('../models/category');
 const categoryRouter = express.Router();
 
-
-//get all categories
+/**
+ * Return all categories
+ */
 categoryRouter.get('/', (req, res) => {
     Category.find().then((data) => {
         res.json(data);
@@ -15,7 +16,9 @@ categoryRouter.get('/', (req, res) => {
 });
 
 
-//add new category
+/**
+ * Add new category
+ **/
 categoryRouter.post('/', (req, res) => {
     const category = new Category({
         name: req.body.name
@@ -30,7 +33,9 @@ categoryRouter.post('/', (req, res) => {
     });
 });
 
-//get all books from spacific category
+/**
+ * Return all books of specific category
+ */
 categoryRouter.get('/:id', (req, res) => {
 
     Book.find({ categoryId: req.params.id }).then((data) => {
@@ -40,7 +45,9 @@ categoryRouter.get('/:id', (req, res) => {
     });    
 });
 
-// update category by id
+/**
+ * update category with specific id
+ **/ 
 categoryRouter.patch('/:id', (req, res) => {
     Category.updateOne({_id: req.params.id},{ $set: { name: req.body.name },}).then(() => {
         res.json({msg: 'updated'})
@@ -49,8 +56,9 @@ categoryRouter.patch('/:id', (req, res) => {
     });
 });
 
-
-//delete category by id
+/**
+ * Delete category with specific id 
+ */
 categoryRouter.delete('/:id', (req, res) => {
 
 
@@ -62,6 +70,5 @@ categoryRouter.delete('/:id', (req, res) => {
         res.json({msg: err});
     });
 });
-
 
 module.exports = categoryRouter;
