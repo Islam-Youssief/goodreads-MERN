@@ -5,9 +5,6 @@ const Book = require('../models/book');
 const bookRouter = express.Router();
  const multer = require('multer');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
-app.use(fileUpload());
-app.use('/public', express.static(__dirname + './public'));
 app.use(bodyParser.json());
 
 //get all books
