@@ -14,7 +14,6 @@ const passportJWT = require('passport-jwt');
 const User = mongoose.model('users');
 const PORT = process.env.PORT || 3000;
 
-
 mongoose.set('useCreateIndex', true);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,7 +21,9 @@ app.use(expressValidator());
 app.use('/uploads', express.static('uploads'));
 mongoose.Promise = global.Promise;
 
-//start connection to database
+/**
+ * start connection to database
+ * */
 mongoose.connect(uri, {
     autoReconnect: true,
     reconnectTries: Number.MAX_VALUE,
@@ -33,21 +34,59 @@ mongoose.connect(uri, {
     }
 });
 
+/**
+ * Setting passport getway 
+ */
+app.use(passport.initialize());
+const stategy = passportJWT.Strategy;
+const passportExtraction = passportJWT.ExtractJwt;
+/**
+ * prepaire the options
+ */
+const opt = {
+    jwtFromRequest: passportExtraction.fromAuthHeaderAsBearerToken(),
+    secretOrKey: keys.secretOrKey
+}
 
-//categories router
+/**
+ * using the passport
+ */
+passport.use(new stategy(opt, (info, verify)=>{
+    User.findById(info._id)
+        .then(user=>{
+            if(user)
+                return verify(null, user);
+            
+            else
+                return verify(null, false);
+            
+        })
+        .catch(error=>{
+            console.log(error);
+        });
+
+}));
+
+/**
+ * Categories router
+ **/
 app.use('/categories', categoryRouter);
 
-//authors router
+/**
+ * Books router
+ **/
+app.use('/books', bookRouter);
+
+/**
+ * Authors router
+ **/
 app.use('/authors', autherRouter);
 
-// books router
-app.use('/books', bookRouter);
-//users router
+/**
+ * Users router
+ * */
 app.use('/users', userRouter);
-//books router
-app.use('/book', bookRouter);
 
 app.listen(PORT, (req, res) => {
-    console.log("server running on port: " + PORT);
+    console.log(`Server Is Running On Port:  ${PORT}`);
 });
-

@@ -5,30 +5,42 @@ const jwt = require('jsonwebtoken');
 const keys = require('../configs/keys');
 const passport = require('passport');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
 
+
+
+/**
+ * Load User model
+ */
+const User = require('../models/user');
+
+
+/**
+ * Signup router
+ */
 router.post('/signup', (req, res) => {
-    // also we will check on spaces using trim
+    // also we will check on spaces using trim 
     req.checkBody('firstName', 'First name must be specified.').notEmpty();
     req.checkBody('lastName', 'Last name must be specified.').notEmpty();
     req.checkBody('userName', 'User name must be specified.').notEmpty();
     req.checkBody('password', 'Password must be specified.').notEmpty();
-    req.checkBody('email',    'Email must be specified.').notEmpty();
+    req.checkBody('email', 'email must be specified.').notEmpty();
     req.checkBody('firstName','First name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('lastName', 'Last name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('userName', 'User name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('password', 'Password must be at least 8 character.').isLength({ min: 8 });
-    
 
     const errors = req.validationErrors(req);
     if (errors) {
-        console.log("error While signing up")
+        console.log("Error while signup new user");
         res.json(errors);
         return;
-    } else {
-
+    } 
+    else
+     {
         User.findOne({ email: req.body.email }).then(user => {
             if (user) {
-                return res.status(400).json({ email: 'Email is already exists !' });
+                return res.status(400).json({ email: 'Email already exists' });
             } else {
                 const newUser = new User({
                     firstName: req.body.firstName,
@@ -56,17 +68,20 @@ router.post('/signup', (req, res) => {
 
 });
 
+/**
+ * login router
+ */
 router.post('/login', (req, res) => {
 
     const email = req.body.email;
-    const password = req.body.password;    
+    const password = req.body.password;
     req.checkBody('email', 'Email is required !').notEmpty();
-    req.checkBody('email', 'Email is incorrect !').isEmail();
+    req.checkBody('email', 'Email is not correct !').isEmail();
     req.checkBody('password', 'Password is required !').notEmpty();
+    
     const errors = req.validationErrors(req);
-    if (errors) 
-    { 
-        console.log("error in Log in page .!!");
+    if (errors) {
+        console.log("Error while Login ..");
         res.json(errors);
         return;
     } 
@@ -74,22 +89,59 @@ router.post('/login', (req, res) => {
     {
         User.findOne({ email: email })
         .then(user => {
-            if (!user) {
-                res.status(404).json({ email: 'email not found' });
-            } else {
+            if (!user) 
+                res.status(404).json({ email: 'Email is not registered' });
+            else 
+            {
                 bcrypt.compare(password, user.password)
                     .then(isMached => {
-                        if (isMached) {
-                            //if user mached lets creat the token
-                            // Alla Task using JWT ********** Note
-                            //res.json({msg: 'success'});
-                        } else {
-                            res.status(400).json({ password: 'password incorrect' });
-                        }
+                        if (isMached)
+                        {
+                            const info = {
+                                _id: user._id,
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                userName: user.userName,
+                                email: user.email,
+                                photo: user.photo
+                            };
+
+                            jwt.sign(info, keys.tokenKey, { expiresIn: 3600 }, (err, token) => {
+                                if (!err) {
+                                    res.json({ token: "Bearer " + token });
+                                } else {
+                                    res.json({ err: err });
+                                }
+                            });
+                        } 
+                        else
+                            res.status(400).json({ password: 'password is not correct' });             
                     })
-                }
+            }
         });
     }
 });
 
+
+/**
+ * Admin router 
+ */
+router.get('/admin', passport.authenticate('jwt', {session: false}), (req, res)=>{
+
+    const loginUser = {
+        _id: req.user._id,
+        firstName: req.user.firstName, 
+        lastName: req.user.lastName,
+        userName: req.user.userName,
+        email: req.user.email,
+        photo: req.user.photo,
+        isAdmin: req.user.isAdmin, 
+
+    }
+    res.json(loginUser);
+})
+ 
+
 module.exports = router;
+
+
