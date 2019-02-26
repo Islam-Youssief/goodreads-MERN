@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const Book = require('../models/book');
+const userBook = require('../models/userBook');
 const bookRouter = express.Router();
  const multer = require('multer');
 const bodyParser = require('body-parser');
