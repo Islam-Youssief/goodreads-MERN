@@ -41,8 +41,8 @@ router.post('/signup', (req, res) => {
     req.checkBody('lastName', 'Last name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('userName', 'User name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('password', 'Password must be at least 8 character.').isLength({ min: 8 });
-    req.checkBody('firstName', 'Numbers are not allowed.').isNumeric();
-    req.checkBody('lasttName', 'Numbers are not allowed.').isNumeric();
+    // req.checkBody('firstName', 'Numbers are not allowed.').isNumeric();
+    // req.checkBody('lasttName', 'Numbers are not allowed.').isNumeric();
 
     const errors = req.validationErrors(req);
     if (errors) {

@@ -3,6 +3,8 @@ const Author = require('../models/author');
 const Book = require('../models/book');
 const Category = require('../models/category');
 const categoryRouter = express.Router();
+const passport = require('passport');
+
 
 /**
  * Return all categories

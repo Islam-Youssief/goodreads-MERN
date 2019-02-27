@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema({
-    photo:String,
-    name : String,
+    photo:{type:String},
+    name : {type:String},
     categoryId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Category"

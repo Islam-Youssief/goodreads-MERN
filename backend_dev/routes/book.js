@@ -1,15 +1,17 @@
+
+const express = require('express');
 const app = express();
 const bookRouter = express.Router();
-const express = require('express');
-const Book = require('../models/book');
-const multer = require('multer');
-const bodyParser = require('body-parser');
 const Category = require('../models/category');
 const Author = require('../models/author');
 const UserBook = require('../models/userBook');
 const Review = require('../models/review');
-
+const Book = require('../models/book');
 const multer = require('multer');
+const bodyParser = require('body-parser');
+
+
+
 const passport = require('passport');
 app.use(bodyParser.json());
 
@@ -30,13 +32,13 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
+// const upload = multer({
+//     storage: storage,
+//     limits: {
+//         fileSize: 1024 * 1024 * 5
+//     },
+//     fileFilter: fileFilter
+// });
 
 /**
  * Return all books

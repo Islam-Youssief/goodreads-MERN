@@ -1,8 +1,9 @@
-const app = express();
 const express = require('express');
+const app = express();
+const authorRouter = express.Router();
 const Author = require('../models/author');
 const Book = require('../models/book');
-const authorRouter = express.Router();
+
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const UserBook = require('../models/userBook');
@@ -29,13 +30,13 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
+// const upload = multer({
+//     storage: storage,
+//     limits: {
+//         fileSize: 1024 * 1024 * 5
+//     },
+//     fileFilter: fileFilter
+// });
 
 /**
  * Return all the Authors
