@@ -9,8 +9,6 @@ import authorsList from "./components/authorComponent";
 import categoryId from "./components/categoryId";
 import bookId from "./components/bookId";
 import authorId from "./components/authorId";
-import admin from "./components/admin";
-import ex from "./components/ex";
 
 
 
@@ -64,13 +62,7 @@ class App extends Component {
         </div>
       </Router>
 
-      <Router>
-       
-       <Route path='/admin' component={admin} />
-
-      
-     </Router>
-
+     
 </>
     );
   }
