@@ -19,17 +19,29 @@ categoryRouter.get('/', (req, res) => {
 /**
  * Add new category
  **/
-categoryRouter.post('/', (req, res) => {
-    const category = new Category({
-        name: req.body.name
-    });
-    category.save((err) => {
-        if (!err) {
-            res.json({msg: 'saved AND Success..'});
-        }else{
-            res.json({msg: err});
-        }
+categoryRouter.post('/admin/category', passport.authenticate('jwt', { session: false }),(req, res) => {
+    if(req.user.isAdmin != true){
+        return res.status(400).json({ msg: 'UnAthorized Access' });
+    }
 
+    req.checkBody('name', 'You must put a category name.').notEmpty();
+    req.checkBody('name', 'Numberss are not allowed .').isNumeric();
+
+    Category.findOne({name: req.body.name}).then(newcat => {
+        if (newcat) {
+            return res.status(400).json({name: 'category is already exists'});
+        } else {
+            const category = new Category({
+                name: req.body.name
+            });
+            category.save((err) => {
+                if (!err) 
+                    res.json({msg: 'saved'});
+                else 
+                    res.json({msg: err});
+                
+            });
+        }
     });
 });
 
@@ -48,7 +60,11 @@ categoryRouter.get('/:id', (req, res) => {
 /**
  * update category with specific id
  **/ 
-categoryRouter.patch('/:id', (req, res) => {
+categoryRouter.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    if(req.user.isAdmin != true)
+        return res.status(400).json({ msg: 'You are not Autorized !' });
+    
     Category.updateOne({_id: req.params.id},{ $set: { name: req.body.name },}).then(() => {
         res.json({msg: 'updated'})
     }).catch((err) => {
@@ -58,17 +74,28 @@ categoryRouter.patch('/:id', (req, res) => {
 
 /**
  * Delete category with specific id 
+ * make sure of authorization ->delete on sequence categoryId-> bookId->review
  */
-categoryRouter.delete('/:id', (req, res) => {
-
-
+categoryRouter.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    if(req.user.isAdmin != true)
+        return res.status(400).json({ msg: 'You are unathorized !' });
+    
     Category.findByIdAndRemove(req.params.id).then(() => {
-        Book.findByIdAndRemove({ categoryId: req.params.id }).then(() => {
-            res.json({msg: 'deleted'});
+            const categID = req.params.id;
+            Book.find({categoryId: categID}).then((book)=>{
+                const BookID = book.bookId;
+                Book.findByIdAndRemove(BookID).then(()=>{
+                    UserBook.remove({bookId:BookID}).then(()=>{
+                        Review.remove({bookId:BookID}).then(()=>{
+                            res.json({msg: 'Category deleted successfully ..'});
+                        })
+                    })
+                })
+            })
+        }).catch(() => {
+            res.json({msg: err});
         });
-    }).catch(() => {
-        res.json({msg: err});
-    });
 });
+
 
 module.exports = categoryRouter;

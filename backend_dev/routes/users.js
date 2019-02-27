@@ -13,7 +13,20 @@ const bcrypt = require('bcryptjs');
  * Load User model
  */
 const User = require('../models/user');
+const books = require('../models/userBook');
 
+/**
+ * Return all the users
+ */
+
+router.get('/', (req, res) => {
+    User.find().then((data) => {
+        res.json(data);
+    }).catch((err) => {
+        res.send('Error while getting data');
+    });
+
+});
 
 /**
  * Signup router
@@ -25,10 +38,13 @@ router.post('/signup', (req, res) => {
     req.checkBody('userName', 'User name must be specified.').notEmpty();
     req.checkBody('password', 'Password must be specified.').notEmpty();
     req.checkBody('email', 'email must be specified.').notEmpty();
+    req.checkBody('email', 'Choose a valid email').isEmail();
     req.checkBody('firstName','First name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('lastName', 'Last name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('userName', 'User name must be at least 3 character.').isLength({ min: 3, max: 8 });
     req.checkBody('password', 'Password must be at least 8 character.').isLength({ min: 8 });
+    req.checkBody('firstName', 'Numbers are not allowed.').isNumeric();
+    req.checkBody('lasttName', 'Numbers are not allowed.').isNumeric();
 
     const errors = req.validationErrors(req);
     if (errors) {
@@ -49,7 +65,9 @@ router.post('/signup', (req, res) => {
                     email: req.body.email,
                     password: req.body.password
                 });
-
+                /**
+                * Generating salt to password
+                */
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
                         if (err)
@@ -142,6 +160,15 @@ router.get('/admin', passport.authenticate('jwt', {session: false}), (req, res)=
 })
  
 
+router.get('/admin/books', passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        books.find().then((data) => {
+            res.json(data);
+        }).catch((err) => {
+            res.send('Error in getting data');
+        })
+
+    });
 module.exports = router;
 
 
