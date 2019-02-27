@@ -23,41 +23,6 @@ function Form(props) {
 export default function CategoryTab (props) {
 
     
-    // deleteCategory = (index) => {
-    //     const categories = [...this.state.category];
-    //     categories.splice(index, 1);
-    //     this.setState({
-    //       category: categories
-    //     })
-    //   }
-
-    //   showForm = () => {
-    //     this.setState({
-    //       showComponent: true
-    //     })
-    //   }
-    
-    //   closeForm = () => {
-    //     this.setState({
-    //       showComponent: false
-    //     })
-    //   }
-    
-    //   addCategory = () => {
-    //     const categories = [...this.state.category]
-    //     categories.push({ name: this.state.newName })
-    //     this.setState({
-    //       category: categories
-    //     })
-    //   }
-    
-    
-    
-    //   getName = (event) => {
-    //     this.setState({
-    //       newName: event.target.value
-    //     })
-    //   }
     
     
 

@@ -6,22 +6,10 @@ import { Table } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import CategoryTab from './components/categoryTab'
+import AuthorTab from './components/authorTab'
+import BookTab from './components/bookTab'
 
 
-// function Form(props) {
-
-
-
-//   return <div>
-
-
-//     <label>Name:</label><br />
-//     <input type="text" onChange={props.getName} value={props.value} /><br />
-
-
-//     <button onClick={props.addCategory}>Add Category</button>
-//   </div>
-// }
 
 class App extends Component {
 
@@ -186,25 +174,11 @@ class App extends Component {
                 <Col sm="6">
                   <div>
 
-                    <Table striped >
-                      <thead><tr><th>#</th><th>Photo</th><th>Name</th>
-                      <th>CategoryId</th><th>AuthorId</th><th>Actions</th>
-                      </tr></thead>
-                      <tbody>{this.state.books.map((item, index) => (
-                        <tr key={index + 1}>
-                          <th scope="row" >{index + 1}</th>
-                          <th size="sm">{item.photo}</th>
-                          <th size="sm">{item.name}</th>
-                          <th size="sm">{item.categoryId}</th>
-                          <th size="sm">{item.authorId}</th>
+                    
 
-                          <th><button>edit</button><button onClick={() => this.deleteBook(index)}>delete</button></th></tr>
+                    <BookTab book= {this.state.books} deleteBook={this.deleteBook}/>
 
-                      ))}</tbody>
-                    </Table>
-
-
-                    <button onClick={this.showForm}>Add Book</button>
+                    {/* <button onClick={this.showForm}>Add Book</button> */}
                   </div>
                   </Col>
             </Row>
@@ -214,25 +188,11 @@ class App extends Component {
                 <Row>
                   <Col sm="6">
                   <div>
-                  <Table striped >
-                      <thead><tr><th>#</th><th>Photo</th><th>firstName</th>
-                      <th>lastName</th><th>BirthOfDate</th><th>Actions</th>
-                      </tr></thead>
-                      <tbody>{this.state.authors.map((item, index) => (
-                        <tr key={index + 1}>
-                          <th scope="row" >{index + 1}</th>
-                          <th size="sm">{item.photo}</th>
-                          <th size="sm">{item.firstName}</th>
-                          <th size="sm">{item.lastName}</th>
-                          <th size="sm">{item.DateOfBirth}</th>
-
-                          <th><button>edit</button><button onClick={() => this.deleteAuthor(index)}>delete</button></th></tr>
-
-                      ))}</tbody>
-                    </Table>
+              
+                    <AuthorTab author= {this.state.authors} deleteAuthor={this.deleteAuthor}/>
 
 
-                    <button onClick={this.showForm}>Add Author</button>
+                    {/* <button onClick={this.showForm}>Add Author</button> */}
                   </div>
 
                   </Col>
