@@ -12,7 +12,7 @@ const uri = keys.mongoURI;
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const User = mongoose.model('users');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 mongoose.set('useCreateIndex', true);
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,7 +45,7 @@ const passportExtraction = passportJWT.ExtractJwt;
  */
 const opt = {
     jwtFromRequest: passportExtraction.fromAuthHeaderAsBearerToken(),
-    secretOrKey: keys.secretOrKey
+    secretOrKey: keys.tokenKey
 }
 
 /**
