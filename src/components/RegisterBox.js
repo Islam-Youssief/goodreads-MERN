@@ -1,6 +1,6 @@
 import React , { Componant } from 'react';
 import ReactDOM from 'react-dom';
-import './App.css';
+import '../App.css';
 
 
 //Register Box 
