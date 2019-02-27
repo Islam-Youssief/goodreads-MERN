@@ -5,23 +5,23 @@ import { Table } from 'reactstrap';
 
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
+import CategoryTab from './components/categoryTab'
+
+
+// function Form(props) {
 
 
 
-function Form(props) {
+//   return <div>
 
 
-
-  return <div>
-
-
-    <label>Name:</label><br />
-    <input type="text" onChange={props.getName} value={props.value} /><br />
+//     <label>Name:</label><br />
+//     <input type="text" onChange={props.getName} value={props.value} /><br />
 
 
-    <button onClick={props.addCategory}>Add Category</button>
-  </div>
-}
+//     <button onClick={props.addCategory}>Add Category</button>
+//   </div>
+// }
 
 class App extends Component {
 
@@ -56,10 +56,10 @@ class App extends Component {
         lastName: 'Ali',
         DateOfBirth: '11-10-1970'
       }],
-      newName: '',
+      // newName: '',
 
 
-      showComponent: false,
+      // showComponent: false,
 
       currentTab: '1'
 
@@ -132,6 +132,8 @@ class App extends Component {
   }
 
   render() {
+
+    
     return (
       <>
         <div className="App">
@@ -170,37 +172,10 @@ class App extends Component {
               <Row>
                 <Col sm="12">
 
-
-
-                  <div>
-
-                    <Table striped >
-                      <thead><tr><th>#</th><th>Name</th><th>Actions</th></tr></thead>
-                      <tbody>{this.state.category.map((item, index) => (
-                        <tr key={index + 1}>
-                          <th scope="row" >{index + 1}</th>
-                          <th size="sm">{item.name}</th>
-                          <th><button>edit</button><button onClick={() => this.deleteCategory(index)}>delete</button></th></tr>
-
-                      ))}</tbody>
-                    </Table>
-
-
-                    <button onClick={this.showForm}>Add Category</button>
-
-                  </div>
-
-
-
-                  <Modal
-                    isOpen={this.state.showComponent}
-                    contentLabel="Hello!">
-                    <Form addCategory={this.addCategory} getName={this.getName}
-                      value={this.state.newName}
-                    />
-                    <button onClick={this.closeForm}>Close</button>
-
-                  </Modal>
+                  <CategoryTab cat= {this.state.category} deleteCategory={this.deleteCategory} showForm={this.showForm} 
+                  showComponent={this.state.showComponent} addCategory={this.addCategory} getName={this.getName}
+                  value={this.state.newName} closeForm={this.closeForm}
+                  />
 
                 </Col>
               </Row>
