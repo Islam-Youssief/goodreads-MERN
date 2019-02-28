@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import './App.css';
+import {Route ,Link} from "react-router-dom";
+import AdminLogin from "./components/AdminLogin"
+import AdminControl from "./components/AdminControl";
+import Footer from "./components/Footer";
+import UrsLogin from "./components/UsrLogin";
+
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import readings from "./components/readingsComponent";
-import categoryList from "./components/categoryComponent";
-import booksList from "./components/booksComponent";
-import authorsList from "./components/authorComponent";
-import categoryId from "./components/categoryId";
-import bookId from "./components/bookId";
-import authorId from "./components/authorId";
-
-
-
-
-
-
+import { BrowserRouter as Router} from "react-router-dom";
+import readings from "./components2/readingsComponent";
+import categoryList from "./components2/categoryComponent";
+import booksList from "./components2/booksComponent";
+import authorsList from "./components2/authorComponent";
+import categoryId from "./components2/categoryId";
+import bookId from "./components2/bookId";
+import authorId from "./components2/authorId";
+import SignUp from "./components/signup" 
 class App extends Component {
 
  
@@ -27,22 +28,6 @@ class App extends Component {
         <div className='App'>
         
         
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link to="/" className="navbar-brand">Home</Link>
-            <div className="collpase navbar-collapse">
-              <ul className="navbar-nav mr-auto">
-                <li className="navbar-item">
-                  <Link to="/categories" className="nav-link">categories</Link>
-                </li>
-                <li className="navbar-item">
-                  <Link to="/books" className="nav-link">books</Link>
-                </li>
-                <li className="navbar-item">
-                  <Link to="/authors" className="nav-link">authors</Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
           <br />
           
           <Route path='/' exact component={readings} />
@@ -55,7 +40,13 @@ class App extends Component {
           <Route path='/books/:id' component={bookId} />
           <Route path='/authors/:id' component={authorId} />
 
-
+          <Route path="/signup" component={SignUp}/>
+            
+          
+            <Route path="/adminLogin" component={AdminLogin}/>
+            <Route path="/admin" exact component={AdminControl}/> 
+            <Route path="/footer" component={Footer}/>
+            <Route path="/login" component={UrsLogin}/>
       
 
 
