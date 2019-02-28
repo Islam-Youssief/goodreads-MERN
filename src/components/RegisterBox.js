@@ -68,6 +68,15 @@ class RegisterBox extends React.Component {
                accept="image/*"
               placeholder="Upload your image"/>
           </div>
+          <div className="input-group">
+            <label htmlFor="isAdmin">Are you an admin</label>
+            <input
+              type="checkbox"
+              
+              name="isAdmin"
+               
+              />
+          </div>
           <button
             type="button"
             className="login-btn"
