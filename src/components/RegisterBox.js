@@ -22,12 +22,20 @@ class RegisterBox extends React.Component {
         <div className="box">
 
           <div className="input-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="firstName">First Name</label>
             <input
               type="text"
-              name="username"
+              name="firstName"
               className="login-input"
-              placeholder="Username"/>
+              placeholder="Enter Your first name"/>
+          </div>
+          <div className="input-group">
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              className="login-input"
+              placeholder="Enter Your last name"/>
           </div>
 
           <div className="input-group">
@@ -42,6 +50,23 @@ class RegisterBox extends React.Component {
               name="password"
               className="login-input"
               placeholder="Password"/>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="repassword">Retype Password</label>
+            <input
+              type="password"
+              name="repassword"
+              className="login-input"
+              placeholder="Retype Password"/>
+          </div>
+          <div className="input-group">
+            <label htmlFor="image">Image</label>
+            <input
+              type="file"
+              name="image"
+               accept="image/*"
+              placeholder="Upload your image"/>
           </div>
           <button
             type="button"
