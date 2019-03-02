@@ -1,0 +1,43 @@
+.AdminPanelSection {
+    color: #dac6a2;
+    margin-top: 12%;
+    padding-bottom: 10px;
+    border-left: 6px solid #dac6a2;
+}
+.AdminPanelSection > hr{background-color: #dac6a2}
+
+.AdminPanelControls{
+    margin: 0 auto ;
+    color:#dac6a2;
+    padding-bottom: 10px;
+    border-left: 6px solid #dac6a2;
+
+}
+.add_category{
+    margin-top: 0.5% ;
+    margin-bottom: 0.5%}
+
+
+[type="date"] {
+    background-color: #dac6a2;    
+}
+[type="date"]::-webkit-inner-spin-button {
+    display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+}
+
+/* custom styles */
+
+label {
+    display: block;
+}
+input {
+    border: 1px solid #c4c4c4;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    width: 100%;
+}
