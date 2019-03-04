@@ -27,7 +27,7 @@ export default class categoryList extends Component {
 
                     
                     {this.state.category.map((item, index)=>(
-                        <ListGroupItem color="success" tag="a" href={"/category/"+ item.id} action>
+                        <ListGroupItem color="success" tag="a" href={"/categories/"+ item.id} action>
                         {item.name}
                         </ListGroupItem>
                     ))}

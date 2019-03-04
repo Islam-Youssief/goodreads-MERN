@@ -10,11 +10,22 @@ import NavBar from '../components/nav'
 import axios from 'axios'
 
 
+function GetBooks() {
+    return fetch('http://localhost:5000/books/')
+        .then(response =>
+        response.json())
+}
 export default class booksList extends Component {
 
     constructor(){
         super();
         this.state={
+            books2:[],
+            
+
+
+
+
             books:[{
                 id:1,
                 bookName:"strong man",
@@ -46,13 +57,13 @@ export default class booksList extends Component {
         }
     }
    
-
+      
     componentDidMount(){
         axios.get('http://localhost:5000/books/').then(res=>{
-            console.log(res);
             this.setState({
-                data: res.data
+                books2:res.data
             })
+            console.log(res.data);
         }).catch(function(err){
             console.log(err);
         })

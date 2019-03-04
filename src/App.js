@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Route ,Link} from "react-router-dom";
-import AdminLogin from "./components/AdminLogin"
-import AdminControl from "./components/AdminControl";
-import Footer from "./components/Footer";
-import UrsLogin from "./components/UsrLogin";
-
+import AdminLogin from "./components/adminLogin"
+import AdminControl from "./components/adminControl";
+import UserLogin from "./components/userLogin";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router} from "react-router-dom";
 import readings from "./components2/readingsComponent";
@@ -21,32 +19,28 @@ class App extends Component {
  
   render() {
     return (
-<>
-
+  <>
       <Router>
-        
         <div className='App'>
         
-        
           <br />
+          <Route path="/" exact component={UserLogin}/>
+          <Route path="/" exact component={SignUp}/>
           
-          <Route path='/' exact component={readings} />
-
+          <Route path='/home' exact component={readings} />
           <Route path='/categories' exact component={categoryList} />
           <Route path='/books'exact component={booksList} />
           <Route path='/authors' exact component={authorsList} />
-          {/* <Route path='/ex' component={ex} /> */}
           <Route path='/categories/:id' component={categoryId} />
           <Route path='/books/:id' component={bookId} />
           <Route path='/authors/:id' component={authorId} />
 
-          <Route path="/signup" component={SignUp}/>
-            
-          
+            {/*user login*/}
+            <Route path="/login" component={UserLogin}/>
+            {/* Those routes are just for the admin*/}
             <Route path="/adminLogin" component={AdminLogin}/>
             <Route path="/admin" exact component={AdminControl}/> 
-            <Route path="/footer" component={Footer}/>
-            <Route path="/login" component={UrsLogin}/>
+            
       
 
 

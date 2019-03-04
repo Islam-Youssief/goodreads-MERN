@@ -1,45 +1,53 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, CardLink, CardBlock } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, CardLink, CardBlock , Input } from 'reactstrap';
+import NavBar from './nav'
+import Rate from "./stars";
+import Reviews from "./reviews";
 
-import Dropdown from './dropdown'
-
-
-
-export default class bookId extends Component {
-
-    
-   
+export default class BookId extends Component {
     
     render() {
         return (
-            <div style={{ marginBottom: 0 }}>
-
-                
-                <div style={{ width: 200 }}>
-                    <Card >
+            <div className="container-fluid">
+            <NavBar/>
+            <div className="row BookPage">
+                <div className="col_trainings BookImg">
+                    <div className="Img">
+                        <Card>
+                            <img width="100%" height="200px" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />
+                        </Card>
+                    </div>
+                    <div>
+                        <Input width="50%" type="select" name="select1" id="exampleSelect">
+                            <option>want to read</option>
+                            <option>reading</option>
+                            <option>read</option>
+                        </Input>
 
                         <CardBody>
-                            <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />
-
+                            <p>Reader eveluation</p>
+                            <Rate/>
                         </CardBody>
-                    </Card>
                     </div>
-                    <div >
-                        <Dropdown/>
-                    </div>
-               
+                </div>
 
-                
-
-
-                {/* <h1>{this.props.match.params.id}</h1>
-             {this.props.children} */}
-
+                <div className="col_downloads BookData">
+                    <h2>Book name</h2>
+                    <h2>by ====</h2>
+                    <h2>cat ====</h2>
+                    <p>avrage eveluation</p>
+                    <Rate/>
+                    <CardText>
+                       about the book about the book about the book about the book
+                    </CardText>
+                </div>
                 <div >
                     <Card >
 
                         <CardBody>
-                            <CardTitle>Review</CardTitle>
+                            <CardTitle>
+                                <Reviews/>
+                                </CardTitle>
 
                             <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
 
@@ -48,6 +56,9 @@ export default class bookId extends Component {
 
                 </div>
             </div>
+
+
+        </div>
         );
     }
 }
