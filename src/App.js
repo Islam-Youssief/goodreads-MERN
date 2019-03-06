@@ -1,56 +1,124 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Route ,Link} from "react-router-dom";
-import AdminLogin from "./components/adminLogin"
-import AdminControl from "./components/adminControl";
-import UserLogin from "./components/userLogin";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router} from "react-router-dom";
-import readings from "./components2/readingsComponent";
-import categoryList from "./components2/categoryComponent";
-import booksList from "./components2/booksComponent";
-import authorsList from "./components2/authorComponent";
-import categoryId from "./components2/categoryId";
-import bookId from "./components2/bookId";
-import authorId from "./components2/authorId";
-import SignUp from "./components/signup" 
-class App extends Component {
+import NavLink from "reactstrap/es/NavLink";
+import NavItem from "reactstrap/es/NavItem";
+import classnames from 'classnames';
+import Nav from "reactstrap/es/Nav";
+import TabContent from "reactstrap/es/TabContent";
+import Row from "reactstrap/es/Row";
+import Col from "reactstrap/es/Col";
+import TabPane from "reactstrap/es/TabPane";
+import { Table } from 'reactstrap';
 
+
+export default class App extends React.Component {
  
+  state ={currentTab: '1'}
+
+  toggle(tab) {
+    if (this.state.currentTab !== tab) {
+      this.setState({
+        currentTab: tab
+      });
+    }
+  }
+
+  
   render() {
     return (
-  <>
-      <Router>
         <div className='App'>
-        
-          <br />
-          <Route path="/" exact component={UserLogin}/>
-          <Route path="/" exact component={SignUp}/>
-          
-          <Route path='/home' exact component={readings} />
-          <Route path='/categories' exact component={categoryList} />
-          <Route path='/books'exact component={booksList} />
-          <Route path='/authors' exact component={authorsList} />
-          <Route path='/categories/:id' component={categoryId} />
-          <Route path='/books/:id' component={bookId} />
-          <Route path='/authors/:id' component={authorId} />
+          <Nav tabs>
+              <NavItem>
+                <NavLink
+                    className={classnames({ active: this.state.currentTab === '1' })}
+                    onClick={() => { this.toggle('1'); }}
+                >
+                  Categories
+                </NavLink>
+              </NavItem>
 
-            {/*user login*/}
-            <Route path="/login" component={UserLogin}/>
-            {/* Those routes are just for the admin*/}
-            <Route path="/adminLogin" component={AdminLogin}/>
-            <Route path="/admin" exact component={AdminControl}/> 
-            
-      
+            <NavItem>
+              <NavLink
+                  className={classnames({ active: this.state.currentTab === '2' })}
+                  onClick={() => { this.toggle('2'); }}
+              >
+                Books
+              </NavLink>
+            </NavItem>
+
+            <NavItem>
+              <NavLink
+                  className={classnames({ active: this.state.currentTab === '3' })}
+                  onClick={() => { this.toggle('3'); }}
+              >
+                Authors
+              </NavLink>
+            </NavItem>
 
 
+          </Nav>
+
+          <TabContent className='TabContent' currentTab={this.state.currentTab}>
+            <TabPane  tabId="1">
+              <Row>
+                <Col  lg="12">
+                  <Table >
+                    <thead >
+                    <tr className='TabContent'>
+                      <th >ID</th>
+                      <th>Name</th>
+                      <th>Actions</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr className='TabContent'>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>
+                        <button type="button" className="btn btn-danger">Delete</button> {" "}
+                        <button type="button" className="btn btn-success">Edit</button>
+                      </td>
+                    </tr>
+                    <tr className='TabContent'>
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td><button type="button" className="btn btn-danger">Delete</button> {" "}
+                        <button type="button" className="btn btn-success">Edit</button></td>
+
+                    </tr>
+                    <tr className='TabContent'>
+                      <th scope="row">3</th>
+                      <td>Larry</td>
+                      <td><button type="button" className="btn btn-danger">Delete</button> {" "}
+                        <button type="button" className="btn btn-success">Edit</button></td>
+
+                    </tr>
+                    </tbody>
+                  </Table>
+                </Col>
+              </Row>
+            </TabPane>
+
+            <TabPane tabId="2">
+              <Row>
+                <Col lg="12">
+                  <h4>Tab 2 Contents</h4>
+                </Col>
+              </Row>
+            </TabPane>
+
+            <TabPane tabId="3">
+              <Row>
+                <Col lg="12">
+                  <h4>Tab 3 Contents</h4>
+                </Col>
+              </Row>
+            </TabPane>
+
+          </TabContent>
         </div>
-      </Router>
-
-     
-</>
     );
   }
 }
-
-export default App;
+// export default App;
