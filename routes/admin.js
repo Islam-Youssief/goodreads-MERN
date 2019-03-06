@@ -3,67 +3,61 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../configs/keys');
-// const passport = require('passport');
 const User = require('../models/user');
-
+/**
+ * Admin Authorization
+ */
 router.post('/', (req, res) => {
 
     const email = req.body.email;
     const password = req.body.password;
-
-    req.checkBody('email', 'Email is required !').notEmpty();
-    req.checkBody('email', 'Email is incorrect !').isEmail();
-    req.checkBody('password', 'Password is required !').notEmpty();
-
+    req.checkBody('email', 'Enter your email ya Admin').notEmpty();
+    req.checkBody('password', 'Enter your password ya Admin').notEmpty();
+    req.checkBody('email', 'Make sure of to enter your email ..').isEmail();
     const errors = req.validationErrors(req);
-    if (errors) {
-        console.log("error in Log in page .!!");
-        res.json(errors);
-        return;
-    } else {
+    if (errors) 
+        return res.json(errors);
+    else {
         User.findOne({ email: email })
             .then(user => {
-                if (!user) {
+                if (!user) 
                     res.status(404).json({ email: 'email not found' });
-                } else {
+                else
+                {
                     if (user.isAdmin) {
                         bcrypt.compare(password, user.password)
-                            .then(isMached => {
-                                if (isMached) {
-                                    //if user mached lets creat the token
-                                    //create the payload
-                                    const payload = {
-                                        _id: user._id,
-                                        firstName: user.firstName,
-                                        lastName: user.lastName,
-                                        userName: user.userName,
-                                        email: user.email,
-                                        photo: user.photo,
-                                        isAdmin: user.isAdmin
-                                    };
+                        .then(isMached => {
+                            if (isMached) 
+                            {
+                                const info = {
+                                    _id: user._id,
+                                    firstName: user.firstName,
+                                    lastName: user.lastName,
+                                    email: user.email,
+                                    photo: user.photo,
+                                    isAdmin: user.isAdmin
+                                };
 
-                                    jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
-                                        if (!err) {
-                                            res.json({ token: "Bearer " + token });
-                                        } else {
-                                            console.log("not admin")
-                                            res.json({ err: err });
-                                        }
-                                    });
-                                    //res.json({msg: 'success'});
-                                } else {
-                                    res.status(400).json({ password: 'password incorrect' });
-                                }
+                                jwt.sign(info, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+                                    if (!err)
+                                        res.json({ token: "Bearer " + token });
+                                    else {
+                                        console.log("You can't hack this website");
+                                        console.log("You Are Not Authorized to access the site ! ");
+                                        res.json({ err: err });
+                                    }
+                                });
+                            }
+                            else 
+                                res.status(400).json({ password: 'Enter Your password ya admin..' });
+                            
                             })
-                    } else {
-                        res.json({ msg: "unauthoraized" });
                     }
+                    else
+                        res.json({ msg: "You Are Not Authorized to access the site ! " });                    
                 }
-
             });
     }
-
-
 });
 
 module.exports = router;

@@ -9,22 +9,21 @@ reviewRouter.post('/', (req, res) => {
         userId: req.body.userId
     });
     review.save((err) => {
-        if (!err) {
-            res.json({ msg: 'review saved' });
-        } else {
+        if (!err) 
+            res.json({ msg: 'Success saving your review' });
+        else 
             res.json({ msg: err });
-        }
     });
 });
 
 reviewRouter.get('/:id', (req, res) => {
     Review.find({bookId: req.params.id}).populate('bookId').populate('userId').then(reviews => {
         res.json(reviews);
-        console.log(reviews);
     }).catch(err => {
         res.json(err);
     });
 });
+
 
 reviewRouter.put('/:id', (req, res) => {
     Review.findOneAndUpdate(req.params.id, {

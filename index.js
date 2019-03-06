@@ -13,29 +13,19 @@ const bookRouter = require('./routes/book');
 const userBook = require('./routes/userBook');
 const adminRouter = require('./routes/admin');
 const reviewRouter = require('./routes/review');
-/**
- * Loading all the models
- */
-
-const BookModel = require('./models/book');
-const AuthorModel = require('./models/author');
-const CategoryModel = require('./models/category');
-
-
-const app = express();
 const uri = keys.mongoURI;
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const User = mongoose.model('users');
 const PORT = process.env.PORT || 4000;
 const cors = require('cors');
+const app = express();
 app.use(cors());
-
-mongoose.set('useCreateIndex', true);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(expressValidator());
-app.use('/uploads', express.static('uploads'));
+app.use('/resources/uploads', express.static('uploads'));
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 /**
@@ -46,9 +36,8 @@ mongoose.connect(uri, {
     reconnectTries: Number.MAX_VALUE,
     useNewUrlParser: true
 }, (err) => {
-    if (!err) {
+    if (!err) 
         console.log(`Starting Connection to MongoATLAS ..`);
-    }
 });
 
 /**
@@ -73,10 +62,8 @@ passport.use(new stategy(opt, (info, is_user)=>{
         .then(user=>{
             if(user)
                 return is_user(null, user);
-            
             else
-                return is_user(null, false);
-            
+                return is_user(null, false);            
         })
         .catch(error=>{
             console.log("Error While verifying the user");
@@ -87,12 +74,10 @@ passport.use(new stategy(opt, (info, is_user)=>{
  * Categories router
  **/
 app.use('/categories', categoryRouter);
-
 /**
  * Books router
  **/
 app.use('/books', bookRouter);
-
 /**
  * Authors router
  **/

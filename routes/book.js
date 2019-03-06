@@ -1,21 +1,21 @@
 const express = require('express');
-const Book = require('../models/book');
+const app = express();
+const bookRouter = express.Router();
 const Category = require('../models/category');
 const Author = require('../models/author');
-
 const UserBook = require('../models/userBook');
 const Review = require('../models/review');
-
-const bookRouter = express.Router();
-
+const Book = require('../models/book');
 const multer = require('multer');
-
+const bodyParser = require('body-parser');
 const passport = require('passport');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './uploads/');
+        cb(null, './resources/uploads/');
     },
     filename: function (req, file, cb) {
         cb(null, new Date().toISOString() + file.originalname);
@@ -23,59 +23,52 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') 
         cb(null, true);
-    } else {
+    else 
         cb(null, false);
-    }
+    
 }
 
 const upload = multer({
     storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
+    limits: {fileSize: 1024 * 1024 * 5},
     fileFilter: fileFilter
 });
 
-//get all books
+/**
+ * Return all books
+ */
 bookRouter.get('/', (req, res) => {
     Book.find().populate('authorId').populate('categoryId').then((data) => {
-
         res.json(data);
-      
     }).catch(err => {
-        console.log(err);
+        console.log("Error while returning all books!");
     })
-
 });
 
-//add new book
-//
-bookRouter.post('/', passport.authenticate('jwt', { session: false }),
-    upload.single('photo'), (req, res) => {
+/**
+ * Adding a new book
+ */
+bookRouter.post('/', passport.authenticate('jwt', { session: false }), upload.single('photo'), (req, res) => {
+    console.log("Now Checking on authorization and if this book is already exists ?");
 
-
-    if(req.user.isAdmin != true){
-        return res.status(400).json({ msg: 'UnAthorized Access' });
-    }
-
-    Category.findById(req.body.categoryId).then(category => {
-        if (!category) {
-            return res.status(400).json({ categoryName: 'this category dose not exiest' });
-        }
+    if(req.user.isAdmin != true)
+        return res.status(400).json({ msg: 'You don`t have Access' });
     
-        Author.findOne({ authorName: req.body.authorName }).then(author => {
-            if (!author) {
-                return res.status(400).json({ email: 'this Author dose not exiest' });
-            }
-            let p = 'uploads/2019-03-02T07:43:02.236Zbook.jpg'
-            if(req.file)
-            {
-               p = req.file.path;
-            }
+    if (req.validationErrors(req))
+        return res.json(errors);
+        
+    Category.findById(req.body.categoryId).then(category => {
+        if (!category) 
+            return res.status(400).json({ categoryName: 'You have requested Category that is not exist !' });
+        
+    Author.findOne({ authorName: req.body.authorName }).then(author => {
+            if (!author) 
+                return res.status(400).json({ email: 'You have requested Author that is not existed!' });
+            
         const book = new Book({
-           photo: p,
+            photo: req.file.path || 'No photo till the moment',
             name: req.body.name,
             categoryId: req.body.categoryId,
             authorId: req.body.authorId,
@@ -88,74 +81,74 @@ bookRouter.post('/', passport.authenticate('jwt', { session: false }),
             message: "Created book successfully",
         });
     }).catch(err => {
-        console.log("err : " + err);
-        res.status(500).json({
-            error: err
+        console.log("You got error while creating : " + err);
+        res.status(500).json({ error: err});
+                    });
         });
     });
-        });
-    });
-
 });
-//get book by id
+
+/**
+ * Return All the books with a specific id
+ */
 bookRouter.get('/:id', (req, res) => {
     Book.findById(req.params.id).populate('authorId').populate('categoryId').then((data) => {
         res.json(data);
-    }).catch((err) => {
-        res.json({ msg: err });
+    }).catch((error) => {
+        res.json({ msg: "Error while getting this book "+error });
     });
 });
 
-// update book by id
+/**
+ * Updating book with a specific id 
+ */
 bookRouter.put('/:id', passport.authenticate('jwt', { session: false }), upload.single('photo'), (req, res) => {
 
-    if(req.user.isAdmin != true){
-        return res.status(400).json({ msg: 'UnAthorized Access' });
-    }
-    let path = null;
-    if(req.file)
-    {
-        path = req.file.path;
-    }
-    Book.findByIdAndUpdate(req.params.id, {
-        photo: path,
+    if(req.user.isAdmin != true)
+        return res.status(400).json({ msg: 'You are unauthorized to access the site !' });
+
+    Book.findOneAndUpdate(req.params.id, {
+        photo: req.file.path || 'No photo till the moment',
         name: req.body.name,
         categoryId: req.body.categoryId,
         authorId: req.body.authorId,
         rate: req.body.rate
     }).then((data) => {
         res.json(data)
-    }).catch((err) => {
-        res.json({ msg: err });
+    }).catch((error) => {
+        res.json({ msg: "Error while updating this book "+error });
     });
-
 });
 
-//delete book by id
+/**
+ * Deleting a book with a specific id
+ * jwt -> bookId - userbooks - reviews
+ */
 bookRouter.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    if (req.user.isAdmin != true) {
-        return res.status(400).json({msg: 'UnAthorized Access'});
-    }
-
-    // Book.pre('remove',function(next){
-    //     UserBook.remove({bookId: this._id}).exec();
-    //     Review.remove({bookId: this._id}).exec();
-    //     next();
-    // }).catch((err) => {
-    //     res.json({msg: err});
-    // });
+    
+    if (req.user.isAdmin != true) 
+        return res.status(400).json({ msg: 'You are unauthorized to access the site !' });
+    
     Book.findByIdAndRemove(req.params.id).then((data) => {
-        console.log("line 130 remove book");
         let BookID = data.bookId;
         UserBook.remove({bookId:BookID}).then(()=>{
-            console.log("line 153 remove user book");
             Review.remove({bookId:BookID}).then(()=>{
-                console.log("line 135 remove review");
-                res.json({msg: 'deleted'});
+                res.json({msg: 'Book was deleted sucessfully plus it`s reviews.'});
             })
         })
-        }).catch((err) => {
-        res.json({msg: err});
+        }).catch((error) => {
+        res.json({msg: "Error while deleting this book "+error});
+    });
+});
+
+/**
+ * Search by book name
+ */
+bookRouter.get('/:name/search', (req, res) => {
+    Book.find({ name: { $regex: '.*' + req.params.name + '.*' } }).then((data) => {
+        res.json(data);
+    }).catch((err) => {
+        res.json({ msg: err });
     });
 });
 
